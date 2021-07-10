@@ -40,6 +40,10 @@ client.connect(err => {
         reply.send({error: err, message: getMessage()})
       } else if (!docs.length) {
         reply.send({error: "Name not dropping or name not cached", message: getMessage()})
+      } else if (docs[0].UNIX < Math.floor(+new Date() / 1000)) {
+        // already dropped
+        collection.deleteOne({name: name}) // delete
+        reply.send({error: "Name already dropped, deleted from DB", dropAgo: Math.floor(+new Date() / 1000) - docs[0].UNIX, message: getMessage()})
       } else {
         reply.send({
           name: docs[0].name,
