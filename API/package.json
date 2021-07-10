@@ -1,0 +1,7 @@
+{
+  "dependencies": {
+    "dotenv": "^10.0.0",
+    "fastify": "^3.19.0",
+    "mongodb": "^3.6.10"
+  }
+}
