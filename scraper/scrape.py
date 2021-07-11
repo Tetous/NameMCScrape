@@ -38,7 +38,7 @@ class Name():
         self.droptime = droptime # 9.7.2021 12:23:32
         self.searches = searches
 
-        self.unix = round(datetime.strptime(droptime, '%d.%m.%Y %H:%M:%S').timestamp())
+        self.unix = round(datetime.strptime(droptime, '%Y-%m-%dT%H:%M:%S.%fZ').timestamp())
         self.updated = round(time.time())
     
     # not really used
@@ -76,10 +76,12 @@ def parse_data(h: str): # -> Tuple[list, str]:
 
     for row in rows:
         pageText = row.findAll(text=True)
+        timeObj = row.findAll(lambda tag: tag.name=='time')
+        stamp = timeObj[0].get("datetime")
         if len(pageText) == 4:
-            names.append(Name(pageText[0], f"{pageText[1]} {pageText[3]}"))
+            names.append(Name(pageText[0], stamp))
         elif len(pageText) == 5:            
-            names.append(Name(pageText[0], f"{pageText[1]} {pageText[3]}", searches=pageText[4]))
+            names.append(Name(pageText[0], stamp, searches=pageText[4]))
     try:
         dom = etree.HTML(str(soup))
         link = dom.xpath('/html/body/main/div/div[5]/nav/ul/li[4]/a/@href')[0]
@@ -132,3 +134,5 @@ with open("names.json", "w") as f:
 
 driver.quit()
 sys.exit() 
+
+# $min
