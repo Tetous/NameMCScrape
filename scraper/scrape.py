@@ -12,7 +12,6 @@ from dotenv import load_dotenv
 from pathlib import Path
 
 searches = 1 # minimum searches for scraped names
-betweenRequests = 2 # seconds between requests
 betweenRestarts = 7 # after how many requests the browser should be restarted
 
 # Load from env file
@@ -97,6 +96,7 @@ driver = uc.Chrome(headless=True, options=options)
 print("[+] Started a headless browser")
 
 url = f"https://namemc.com/minecraft-names?sort=asc&searches={searches}"
+url = "https://namemc.com/minecraft-names?time=20210806T010350Z&searches=2&sort=asc"
 allNames = []
 
 count = 0
@@ -119,12 +119,19 @@ while 1:
         options.add_argument('--no-first-run --no-service-autorun --password-store=basic')
         driver = uc.Chrome(headless=True, options=options) 
 
-    tmp = driver.page_source 
-    names, url = parse_data(tmp)
-    db.NameMC.insert_many(namesToJson(names))
-    print(f"[+] Finished scraping for {url}")
+    try:
+        tmp = driver.page_source 
+        names, url = parse_data(tmp)
+        db.NameMC.insert_many(namesToJson(names))
+        print(f"[+] Finished scraping for {url}")
+    except:
+        print(f"[+] Error while getting url: {url} ({Exception})")
+        print("[+] Restarting browser")
+        driver.quit()
+        options = uc.ChromeOptions()
+        options.add_argument('--no-first-run --no-service-autorun --password-store=basic')
+        driver = uc.Chrome(headless=True, options=options) 
     allNames += names
-    time.sleep(betweenRequests)
     
 print(len(allNames))
 j = namesToJson(allNames)
