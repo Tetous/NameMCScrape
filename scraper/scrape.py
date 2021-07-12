@@ -121,7 +121,11 @@ while 1:
 
     try:
         tmp = driver.page_source 
-        names, url = parse_data(tmp)
+        names, tmpurl = parse_data(tmp)
+        if tmpurl == url:
+            print("[+] Done with scraping")
+            break
+        url = tmpurl
         db.NameMC.insert_many(namesToJson(names))
         print(f"[+] Finished scraping for {url}")
     except:
@@ -137,9 +141,6 @@ print(len(allNames))
 j = namesToJson(allNames)
 with open("names.json", "w") as f:
     f.write(j)
-
-
+    
 driver.quit()
 sys.exit() 
-
-# $min

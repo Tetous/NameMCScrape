@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+
+<html>
+    <head>
+        <title>Peet's NameMC API</title>
+        <meta content="Peet's Api" property="og:title" />
+        <meta content="Peet's droptime API - #TensForAdmin #PeetForMod" property="og:description" />
+        <meta content="https://api.peet.ws" property="og:url" />
+
+        <style>
+            body {
+                font-family: Arial, sans-serif;
+                margin-right: 10%;
+                margin-left: 10%;
+                color: #1d3557;
+                background-color: #f1faee;
+                line-height: 1.2;
+            }
+            h1 {
+                margin: 30px;
+                text-align: center;
+            }
+            details summary > * {
+                display: inline;
+            }
+            h3 {
+                margin: 10px;
+            }
+            details {
+                margin: 10px;
+            }
+            details summary {
+                margin-bottom: 10px;
+            }
+            .code {
+                overflow-x: scroll;
+                padding: 15px;
+                padding-left: 30px;
+                padding-right: 30px;
+                background-color: #1d3557;
+                color: #f1faee;  
+                font-family: Menlo, Monaco, "Courier New", monospace;
+                line-height: 1.5;
+                border-radius: 5px;
+            }
+            .red {
+                color: #e63946
+            }
+
+            .green {
+                color: #08c66a
+            }
+
+            .lgreen {
+                color: #16f288
+            }
+
+            .yellow {
+                color: #ffd166
+            }
+
+            .comment {
+                color: rgb(162, 162, 162);
+            }
+
+            .pink {
+                color: rgb(230, 132, 148);
+            }
+        </style>
+    </head>
+
+    <body>
+        <h1>Peet's NameMC API</h1>
+        <p>This API is build by peet#6446. Please don't DM me for general programming help. 
+            The source code of this project can be found <a href="https://github.com/wwhtrbbtt/NameMCScrape"> here</a>. Feel free to make a pull request!</p>
+        
+        <h2>Endpoints</h2>
+        <p class="red"><strong>Note: The 'user-agent' header has to be set to 'PiratSnipe' to not get flagged by cloudflare.</strong></p>
+        <details>
+            <summary><h3>/droptime</h3></summary>
+            <p>Example: GET <a href="/droptime?name=notch">/droptime?name=notch</a></p>
+            <p>Response data:</p>
+            <ul>
+                <li>name: {requested name}</li>
+                <li>message: {random MOTD}</li>
+                <li>*UNIX: {unix droptime}</li>
+                <li>*searches: {NameMC searches}</li>
+                <li>*updated: {unix when the entry got last updated}</li>
+            </ul>
+            <p>Fields with a * will only show if the name has been cached. If the name isn't cached or something went wrong, an 'error' field will be included.</p>
+        </details>
+
+        <details>
+            <summary><h3>/info</h3></summary>
+            <p>Example: GET <a href="/info">/info</a></p>
+            <p>Response data:</p>
+            <ul>
+                <li>cached: {amount of cached names}</li>
+                <li>github: {github link}</li>
+                <li>message: {random MOTD}</li>
+            </ul>
+            <p>If something went wrong, an error field will be returned.</p>
+        </details>
+        <h2>Code snippets</h2>
+        <details>
+        <summary><h3>Python3 (requests)</h3></summary>
+        <div class="code">
+<pre><span class="red">from</span> requests <span class="red">import</span> get
+
+name = <span class="green">"notch"</span>
+url = <span class="red">f</span><span class="green">"https://drops.peet.ws/droptime?name=</span><span class="pink">{</span>name<span class="pink">}</span><span class="green">"</span>
+headers = {<span class="green">"user-agent"</span>: <span class="green">"PiratSnipe"</span>}
+
+r = <span class="yellow">get</span>(url, headers=headers)
+
+<span class="comment"># handle error if non-200 response</span>
+if not r.ok: 
+    exit(<span class="green">"Error! Couldn't parse data from peet's API"</span>)
+
+data = r.<span class="yellow">json</span>()
+<span class="yellow">print</span>(data)</pre>
+        </div>
+        </details>
+
+        <details>
+        <summary><h3>Golang</h3></summary>
+        
+        <div class="code">
+            <!-- req , err := http.<span class="yellow">NewRequest</span>(<span class="green">"GET"</span>, url, <span class="green">nil</span>)<br>
+            <span class="red">if</span> err != nil {<br>
+                <span class="comment">// Handle Error</span><br>
+            } -->
+            
+<pre><span class="lgreen">package</span> <span class="yellow">main</span>
+
+<span class="lgreen">import</span> <span class="green">"net/http"</span>
+
+<span class="red">func</span> <span class="pink">main</span>() {
+    name := <span class="green">"notch"</span>
+    url := <span class="green">"https://drops.peet.ws/droptime?name="</span> + name
+
+    client := http.Client{}<br>
+    req, err := http.NewRequest(<span class="green">"GET"</span>, url, <span class="pink">nil</span>)
+    <span class="red">if</span> err != <span class="pink">nil</span> {
+        <span class="comment">// Handle Error</span>
+    }
+
+    req.Header.Set(<span class="green">"user-agent"</span>, <span class="green">"PiratSnipe"</span>)
+
+    res, err := client.Do(req)
+    <span class="red">if</span> err != <span class="pink">nil</span> {
+        <span class="comment">// Handle Error</span>
+    }
+}</pre>
+        </div>
+    </details>
+    </body>
+</html>

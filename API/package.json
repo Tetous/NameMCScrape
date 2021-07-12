@@ -2,6 +2,7 @@
   "dependencies": {
     "dotenv": "^10.0.0",
     "fastify": "^3.19.0",
+    "fastify-static": "^4.2.2",
     "mongodb": "^3.6.10"
   }
 }
